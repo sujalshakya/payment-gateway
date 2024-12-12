@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payment_gateway_package/esewa/esewa.dart';
 import 'package:payment_gateway_package/khalti/khalti.dart';
 
 void main() {
@@ -27,13 +28,18 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          KhaltiSDKDemo(
+          const KhaltiSDKDemo(
             pidx: 'ZDESAKtxR7xyh6uSoQXgS6',
-          )
+          ),
+          ElevatedButton(
+              onPressed: () {
+                esewa();
+              },
+              child: Text("Esewa"))
         ],
       ),
     );
