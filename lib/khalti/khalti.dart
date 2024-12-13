@@ -61,14 +61,9 @@ class _KhaltiSDKDemoState extends State<KhaltiSDKDemo> {
           if (khaltiSnapshot == null) {
             return const CircularProgressIndicator.adaptive();
           }
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              OutlinedButton(
-                onPressed: () => khaltiSnapshot.open(context),
-                child: const Text('Pay with Khalti'),
-              ),
-            ],
+          return OutlinedButton(
+            onPressed: () => khaltiSnapshot.open(context),
+            child: const Text('Pay with Khalti'),
           );
         },
       ),

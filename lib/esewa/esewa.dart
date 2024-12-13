@@ -7,6 +7,20 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:payment_gateway_package/esewa/models/esewa_payment_success_response.dart';
 
+class Esewa extends StatelessWidget {
+  const Esewa({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      onPressed: () {
+        esewa();
+      },
+      child: const Text('Pay with Esewa'),
+    );
+  }
+}
+
 void esewa() {
   try {
     EsewaFlutterSdk.initPayment(
@@ -18,7 +32,7 @@ void esewa() {
       esewaPayment: EsewaPayment(
         productId: "1d71jd81",
         productName: "Product One",
-        productPrice: "20",
+        productPrice: "10",
         callbackUrl: 'www.google.com',
       ),
       onPaymentSuccess: (EsewaPaymentSuccessResult data) {
