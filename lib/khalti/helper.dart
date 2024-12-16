@@ -28,6 +28,7 @@ Future<String?> generatePidx() async {
     );
     if (response.statusCode == 200) {
       final responseBody = jsonDecode(response.body);
+      print(responseBody['pidx']);
       return responseBody['pidx']; // Return the generated pidx
     } else {
       return null;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:payment_gateway_package/esewa/esewa.dart';
 import 'package:payment_gateway_package/esewa/models/esewa_payment.dart';
 import 'package:payment_gateway_package/khalti/khalti.dart';
+import 'package:payment_gateway_package/khalti/helper.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,18 +34,25 @@ class Home extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          ElevatedButton(
+              onPressed: () {
+                generatePidx();
+              },
+              child: const Text("Generate Pidx")),
           const KhaltiSDKDemo(
-            pidx: 'ZDESAKtxR7xyh6uSoQXgS6',
+            pidx: 'eKKHSfm3aMnCALVZASFnXG',
+            publicKey: '70ac1e9ae2534d63bff4db0ab92257e2',
           ),
-          EsewaView(
-            testmode: false,
+          Esewa(
             secretId: 'JB0BBQ4aD0UqIThFJwAKBgAXEUkEGQUBBAwdOgABHD4DChwUAB0R',
             clientId: 'BhwIWQQADhIYSxILExMcAgFXFhcOBwAKBgAXEQ==',
             esewaPayment: EsewaPayment(
-                productId: '1',
-                productName: 'String',
-                productPrice: '1000',
-                callbackUrl: 'www.google.com'),
+              productId: '1',
+              productName: 'String',
+              productPrice: '1000',
+              callbackUrl: 'www.google.com',
+            ),
+            onSuccess: (p0) => print(p0.merchantName),
           ),
         ],
       ),

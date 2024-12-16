@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:payment_gateway_package/esewa/models/esewa_config.dart';
 import 'package:payment_gateway_package/esewa/models/esewa_payment.dart';
 import 'package:payment_gateway_package/esewa/models/esewa_payment_success_result.dart';
-import 'constants.dart';
+import '../models/constants.dart';
 
 class EsewaFlutterSdk {
   static const MethodChannel _channel = MethodChannel(METHOD_CHANNEL_NAME);
@@ -24,7 +25,7 @@ class EsewaFlutterSdk {
     _channel.setMethodCallHandler((call) async {
       switch (call.method) {
         case PAYMENT_METHOD_SUCCESS:
-          print(":::METHOD CALL RESULT SUCCESS");
+          debugPrint(":::METHOD CALL RESULT SUCCESS");
           final Map<String, dynamic> result;
           if (Platform.isIOS) {
             result = Map<String, dynamic>.from(call.arguments);
@@ -47,11 +48,11 @@ class EsewaFlutterSdk {
           onPaymentSuccess(paymentResult);
           break;
         case PAYMENT_METHOD_FAILURE:
-          print(":::METHOD CALL RESULT FAILURE");
+          debugPrint(":::METHOD CALL RESULT FAILURE");
           onPaymentFailure(call.arguments);
           break;
         case PAYMENT_METHOD_CANCELLATION:
-          print(":::METHOD CALL RESULT CANCELLATION");
+          debugPrint(":::METHOD CALL RESULT CANCELLATION");
           onPaymentCancellation(call.arguments);
           break;
       }

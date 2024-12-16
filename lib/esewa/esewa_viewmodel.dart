@@ -1,54 +1,68 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:payment_gateway_package/esewa/models/esewa_config.dart';
-import 'package:payment_gateway_package/esewa/models/esewa_flutter_sdk.dart';
+import 'package:payment_gateway_package/esewa/base/esewa_flutter_sdk.dart';
 import 'package:payment_gateway_package/esewa/models/esewa_payment.dart';
 import 'package:payment_gateway_package/esewa/models/esewa_payment_success_response.dart';
 import 'package:payment_gateway_package/esewa/models/esewa_payment_success_result.dart';
 import 'package:http/http.dart' as http;
 
 class EsewaViewmodel {
+  ///Whether its test mode or not.
   bool testmode = true;
 
-  void esewa(String secretId, String clientId, EsewaPayment esewaPayment) {
+  Future<EsewaPaymentSuccessResponse> inititalizeEsewa(
+      String secretId, String clientId, EsewaPayment esewaPayment) async {
+    final completer = Completer<EsewaPaymentSuccessResponse>();
+
     try {
       EsewaFlutterSdk.initPayment(
         esewaConfig: EsewaConfig(
-            clientId: clientId,
-            secretId: secretId,
-            environment: Environment.test),
+          clientId: clientId,
+          secretId: secretId,
+          environment: testmode ? Environment.test : Environment.live,
+        ),
         esewaPayment: esewaPayment,
-        onPaymentSuccess: (EsewaPaymentSuccessResult data) {
+        onPaymentSuccess: (EsewaPaymentSuccessResult data) async {
           debugPrint(":::SUCCESS::: => $data");
-          verifyTransactionStatus(data, clientId, secretId);
+          final verificationResult =
+              await verifyTransactionStatus(data, clientId, secretId);
+          completer.complete(verificationResult);
         },
-        onPaymentFailure: (data) {
-          debugPrint(":::FAILURE::: => $data");
+        onPaymentFailure: (String errorMessage) {
+          debugPrint(":::FAILURE::: => $errorMessage");
         },
-        onPaymentCancellation: (data) {
-          debugPrint(":::CANCELLATION::: => $data");
+        onPaymentCancellation: (String cancelMessage) {
+          debugPrint(":::CANCELLATION::: => $cancelMessage");
         },
       );
-    } on Exception catch (e) {
-      debugPrint("EXCEPTION : ${e.toString()}");
+    } catch (e) {
+      debugPrint(":::EXCEPTION::: => $e");
+      completer.completeError("An error occurred: $e");
     }
+
+    return completer.future;
   }
 
-  Future<void> verifyTransactionStatus(EsewaPaymentSuccessResult result,
-      String clientId, String secretId) async {
+  Future<EsewaPaymentSuccessResponse> verifyTransactionStatus(
+      EsewaPaymentSuccessResult result,
+      String clientId,
+      String secretId) async {
     try {
       var response = await callVerificationApi(result, clientId, secretId);
 
       final sucResponse = response.transactionDetails?.status;
       if (sucResponse == 'COMPLETE') {
         debugPrint("Transaction is complete.");
+        return response;
         // Handle success here, perhaps update UI or trigger further actions
       } else {
-        debugPrint("Transaction status is not complete: ");
+        throw Exception('Transaction status is not complete: ');
       }
     } catch (e) {
-      debugPrint("Error verifying transaction: ${e.toString()}");
+      throw Exception("Error verifying transaction: ${e.toString()}");
     }
   }
 
@@ -56,8 +70,9 @@ class EsewaViewmodel {
       EsewaPaymentSuccessResult result,
       String clientId,
       String secretId) async {
-    String url =
-        'https://rc.esewa.com.np/mobile/transaction?txnRefId=${result.refId}';
+    String url = testmode
+        ? 'https://rc.esewa.com.np/mobile/transaction?txnRefId=${result.refId}'
+        : 'https://esewa.com.np/mobile/transaction?txnRefId=${result.refId}';
 
     final response = await http.get(
       Uri.parse(url),

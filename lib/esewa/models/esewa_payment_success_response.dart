@@ -45,6 +45,11 @@ class EsewaPaymentSuccessResponse {
       'merchantName': merchantName,
     };
   }
+
+  @override
+  String toString() {
+    return 'EsewaPaymentSuccessResponse(productId: $productId, productName: $productName, totalAmount: $totalAmount, code: $code, message: $message, transactionDetails: $transactionDetails, merchantName: $merchantName)';
+  }
 }
 
 class Message {
@@ -68,6 +73,11 @@ class Message {
       'technicalSuccessMessage': technicalSuccessMessage,
       'successMessage': successMessage,
     };
+  }
+
+  @override
+  String toString() {
+    return 'Message(technicalSuccessMessage: $technicalSuccessMessage, successMessage: $successMessage)';
   }
 }
 
@@ -96,5 +106,10 @@ class TransactionDetails {
       'referenceId': referenceId,
       'status': status,
     };
+  }
+
+  @override
+  String toString() {
+    return 'TransactionDetails(date: $date, referenceId: $referenceId, status: $status)';
   }
 }

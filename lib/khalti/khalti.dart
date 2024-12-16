@@ -5,7 +5,18 @@ import 'package:khalti_checkout_flutter/khalti_checkout_flutter.dart';
 
 class KhaltiSDKDemo extends StatefulWidget {
   final String pidx;
-  const KhaltiSDKDemo({super.key, required this.pidx});
+  final double? width;
+  final double? height;
+  final bool testMode;
+  final String publicKey;
+  const KhaltiSDKDemo({
+    super.key,
+    required this.publicKey,
+    required this.pidx,
+    this.testMode = true,
+    this.height,
+    this.width,
+  });
   @override
   State<KhaltiSDKDemo> createState() => _KhaltiSDKDemoState();
 }
@@ -19,9 +30,9 @@ class _KhaltiSDKDemoState extends State<KhaltiSDKDemo> {
   void initState() {
     super.initState();
     final payConfig = KhaltiPayConfig(
-      publicKey: '70ac1e9ae2534d63bff4db0ab92257e2',
+      publicKey: widget.publicKey,
       pidx: widget.pidx,
-      environment: Environment.test,
+      environment: widget.testMode ? Environment.test : Environment.prod,
     );
 
     khalti = Khalti.init(
@@ -32,6 +43,7 @@ class _KhaltiSDKDemoState extends State<KhaltiSDKDemo> {
         setState(() {
           this.paymentResult = paymentResult;
         });
+
         khalti.close(context);
       },
       onMessage: (
@@ -64,7 +76,9 @@ class _KhaltiSDKDemoState extends State<KhaltiSDKDemo> {
           return GestureDetector(
               onTap: () => khaltiSnapshot.open(context),
               child: Image.asset("assets/images/khalti.png",
-                  width: 40, height: 40, package: 'payment_gateway_package'));
+                  width: widget.width ?? 40,
+                  height: widget.height ?? 40,
+                  package: 'payment_gateway_package'));
         },
       ),
     );
