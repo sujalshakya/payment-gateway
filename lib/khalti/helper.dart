@@ -5,8 +5,8 @@ Future<String?> generatePidx() async {
   const String khaltiApiUrl = 'https://a.khalti.com/api/v2/epayment/initiate/';
 
   final Map<String, dynamic> requestPayload = {
-    "return_url": "http://example.com/",
-    "website_url": "http://example.com/",
+    "return_url": "http://google.com/",
+    "website_url": "http://google.com/",
     "amount": "1000",
     "purchase_order_id": "Order01",
     "purchase_order_name": "Test",

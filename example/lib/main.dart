@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payment_gateway_package/esewa/esewa.dart';
+import 'package:payment_gateway_package/esewa/models/esewa_payment.dart';
 import 'package:payment_gateway_package/khalti/khalti.dart';
 
 void main() {
@@ -28,14 +29,23 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          KhaltiSDKDemo(
+          const KhaltiSDKDemo(
             pidx: 'ZDESAKtxR7xyh6uSoQXgS6',
           ),
-          Esewa(),
+          EsewaView(
+            testmode: false,
+            secretId: 'JB0BBQ4aD0UqIThFJwAKBgAXEUkEGQUBBAwdOgABHD4DChwUAB0R',
+            clientId: 'BhwIWQQADhIYSxILExMcAgFXFhcOBwAKBgAXEQ==',
+            esewaPayment: EsewaPayment(
+                productId: '1',
+                productName: 'String',
+                productPrice: '1000',
+                callbackUrl: 'www.google.com'),
+          ),
         ],
       ),
     );

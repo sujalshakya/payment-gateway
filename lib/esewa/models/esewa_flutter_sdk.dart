@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:esewa_flutter_sdk/esewa_config.dart';
-import 'package:esewa_flutter_sdk/esewa_payment.dart';
-import 'package:esewa_flutter_sdk/esewa_payment_success_result.dart';
 import 'package:flutter/services.dart';
+import 'package:payment_gateway_package/esewa/models/esewa_config.dart';
+import 'package:payment_gateway_package/esewa/models/esewa_payment.dart';
+import 'package:payment_gateway_package/esewa/models/esewa_payment_success_result.dart';
 import 'constants.dart';
 
 class EsewaFlutterSdk {

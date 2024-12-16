@@ -61,10 +61,10 @@ class _KhaltiSDKDemoState extends State<KhaltiSDKDemo> {
           if (khaltiSnapshot == null) {
             return const CircularProgressIndicator.adaptive();
           }
-          return OutlinedButton(
-            onPressed: () => khaltiSnapshot.open(context),
-            child: const Text('Pay with Khalti'),
-          );
+          return GestureDetector(
+              onTap: () => khaltiSnapshot.open(context),
+              child: Image.asset("assets/images/khalti.png",
+                  width: 40, height: 40, package: 'payment_gateway_package'));
         },
       ),
     );
