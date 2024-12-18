@@ -8,14 +8,14 @@ import 'package:payment_gateway_package/esewa/models/esewa_payment.dart';
 import 'package:payment_gateway_package/esewa/models/esewa_payment_success_response.dart';
 import 'package:payment_gateway_package/esewa/models/esewa_payment_success_result.dart';
 import 'package:http/http.dart' as http;
+import 'package:payment_gateway_package/result_model.dart';
 
 class EsewaViewmodel {
   ///Whether its test mode or not.
   bool testmode = true;
-
-  Future<EsewaPaymentSuccessResponse> inititalizeEsewa(
+  Future<Result<EsewaPaymentSuccessResponse>> initializeEsewa(
       String secretId, String clientId, EsewaPayment esewaPayment) async {
-    final completer = Completer<EsewaPaymentSuccessResponse>();
+    final completer = Completer<Result<EsewaPaymentSuccessResponse>>();
 
     try {
       EsewaFlutterSdk.initPayment(
@@ -29,18 +29,19 @@ class EsewaViewmodel {
           debugPrint(":::SUCCESS::: => $data");
           final verificationResult =
               await verifyTransactionStatus(data, clientId, secretId);
-          completer.complete(verificationResult);
+          completer.complete(Result.success(verificationResult));
         },
         onPaymentFailure: (String errorMessage) {
-          debugPrint(":::FAILURE::: => $errorMessage");
+          completer.complete(Result.failed(":::FAILURE::: => $errorMessage"));
         },
         onPaymentCancellation: (String cancelMessage) {
-          debugPrint(":::CANCELLATION::: => $cancelMessage");
+          completer.complete(
+              Result.cancellation(":::CANCELLATION::: => $cancelMessage"));
         },
       );
     } catch (e) {
       debugPrint(":::EXCEPTION::: => $e");
-      completer.completeError("An error occurred: $e");
+      completer.complete(Result.failed("An error occurred: $e"));
     }
 
     return completer.future;
