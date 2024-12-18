@@ -43,7 +43,7 @@ class Home extends StatelessWidget {
             pidx: '73CSdYSQrFUD8Ymynxye9n',
             publicKey: '70ac1e9ae2534d63bff4db0ab92257e2',
             onSuccess: (p0) {
-              debugPrint("onsuccess ${p0?.payload?.fee.toString()}");
+              debugPrint("onSuccess ${p0?.payload?.fee.toString()}");
             },
           ),
           Esewa(
@@ -55,7 +55,10 @@ class Home extends StatelessWidget {
               productPrice: '1000',
               callbackUrl: 'www.google.com',
             ),
-            onSuccess: (p0) => debugPrint("onsuccesss${p0.merchantName}"),
+            onSuccess: (result) =>
+                debugPrint("onsuccesss${result.merchantName}"),
+            onFailure: (message) => debugPrint("onFailure"),
+            onCancellation: (message) => debugPrint("onCancellation}"),
           ),
         ],
       ),

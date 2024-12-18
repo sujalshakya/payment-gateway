@@ -24,6 +24,10 @@ class Esewa extends StatelessWidget {
   /// Width of logo.
   final double? width;
   final Function(EsewaPaymentSuccessResponse) onSuccess;
+  final Function(String) onCancellation;
+
+  final Function(String) onFailure;
+
   const Esewa(
       {super.key,
       this.testmode = true,
@@ -32,6 +36,8 @@ class Esewa extends StatelessWidget {
       this.width,
       required this.secretId,
       required this.esewaPayment,
+      required this.onFailure,
+      required this.onCancellation,
       required this.onSuccess});
 
   @override
@@ -40,9 +46,17 @@ class Esewa extends StatelessWidget {
     return GestureDetector(
         onTap: () async {
           viewModel.testmode = testmode;
-          final response = await viewModel.inititalizeEsewa(
-              clientId, secretId, esewaPayment);
-          onSuccess(response);
+          await viewModel
+              .initializeEsewa(clientId, secretId, esewaPayment)
+              .then((result) {
+            if (result.isSuccess) {
+              onSuccess(result.data!);
+            } else if (result.isFailed) {
+              onFailure(result.message!);
+            } else if (result.isCancelled) {
+              onCancellation(result.message!);
+            }
+          });
         },
         child: Image.asset(
           'assets/images/esewa.png',
