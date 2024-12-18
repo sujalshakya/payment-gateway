@@ -40,10 +40,10 @@ class Home extends StatelessWidget {
               },
               child: const Text("Generate Pidx")),
           KhaltiSDKDemo(
-            pidx: 'eKKHSfm3aMnCALVZASFnXG',
+            pidx: '73CSdYSQrFUD8Ymynxye9n',
             publicKey: '70ac1e9ae2534d63bff4db0ab92257e2',
             onSuccess: (p0) {
-              print(p0?.payload?.fee ?? "");
+              debugPrint("onsuccess ${p0?.payload?.fee.toString()}");
             },
           ),
           Esewa(
@@ -55,7 +55,7 @@ class Home extends StatelessWidget {
               productPrice: '1000',
               callbackUrl: 'www.google.com',
             ),
-            onSuccess: (p0) => print(p0.merchantName),
+            onSuccess: (p0) => debugPrint("onsuccesss ${p0.merchantName}"),
           ),
         ],
       ),

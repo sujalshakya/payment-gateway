@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:khalti_checkout_flutter/khalti_checkout_flutter.dart';
-import 'package:payment_gateway_package/khalti/helper.dart';
 
 class KhaltiSDKDemo extends StatefulWidget {
   final String pidx;

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 Future<String?> generatePidx() async {
@@ -28,7 +29,7 @@ Future<String?> generatePidx() async {
     );
     if (response.statusCode == 200) {
       final responseBody = jsonDecode(response.body);
-      print(responseBody['pidx']);
+      debugPrint(responseBody['pidx']);
       return responseBody['pidx']; // Return the generated pidx
     } else {
       return null;
