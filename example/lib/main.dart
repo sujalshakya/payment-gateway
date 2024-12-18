@@ -39,9 +39,12 @@ class Home extends StatelessWidget {
                 generatePidx();
               },
               child: const Text("Generate Pidx")),
-          const KhaltiSDKDemo(
+          KhaltiSDKDemo(
             pidx: 'eKKHSfm3aMnCALVZASFnXG',
             publicKey: '70ac1e9ae2534d63bff4db0ab92257e2',
+            onSuccess: (p0) {
+              print(p0?.payload?.fee ?? "");
+            },
           ),
           Esewa(
             secretId: 'JB0BBQ4aD0UqIThFJwAKBgAXEUkEGQUBBAwdOgABHD4DChwUAB0R',

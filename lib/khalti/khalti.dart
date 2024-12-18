@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:khalti_checkout_flutter/khalti_checkout_flutter.dart';
+import 'package:payment_gateway_package/khalti/helper.dart';
 
 class KhaltiSDKDemo extends StatefulWidget {
   final String pidx;
@@ -9,26 +10,30 @@ class KhaltiSDKDemo extends StatefulWidget {
   final double? height;
   final bool testMode;
   final String publicKey;
-  const KhaltiSDKDemo({
-    super.key,
-    required this.publicKey,
-    required this.pidx,
-    this.testMode = true,
-    this.height,
-    this.width,
-  });
+  final Function(PaymentResult?) onSuccess;
+
+  const KhaltiSDKDemo(
+      {super.key,
+      required this.publicKey,
+      required this.pidx,
+      this.testMode = true,
+      this.height,
+      this.width,
+      required this.onSuccess});
   @override
   State<KhaltiSDKDemo> createState() => _KhaltiSDKDemoState();
 }
 
 class _KhaltiSDKDemoState extends State<KhaltiSDKDemo> {
   late final Future<Khalti?> khalti;
+  late final String? pidx;
 
   PaymentResult? paymentResult;
 
   @override
   void initState() {
     super.initState();
+
     final payConfig = KhaltiPayConfig(
       publicKey: widget.publicKey,
       pidx: widget.pidx,
@@ -74,7 +79,10 @@ class _KhaltiSDKDemoState extends State<KhaltiSDKDemo> {
             return const CircularProgressIndicator.adaptive();
           }
           return GestureDetector(
-              onTap: () => khaltiSnapshot.open(context),
+              onTap: () {
+                khaltiSnapshot.open(context);
+                widget.onSuccess(paymentResult);
+              },
               child: Image.asset("assets/images/khalti.png",
                   width: widget.width ?? 40,
                   height: widget.height ?? 40,
