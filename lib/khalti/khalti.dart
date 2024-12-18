@@ -5,14 +5,33 @@ import 'package:khalti_checkout_flutter/khalti_checkout_flutter.dart';
 import 'package:payment_gateway_package/khalti/khalti_failure_model.dart';
 
 class KhaltiSDKDemo extends StatefulWidget {
+  /// Payment Identifier for Khalti.
   final String pidx;
+
+  /// Width of logo.
+
   final double? width;
+
+  /// Height of logo.
+
   final double? height;
+
+  /// Whether it is for testing or not, true on default.
+
   final bool testMode;
+
+  /// Public key for Khalti API.
   final String publicKey;
+
+  /// function to trigger on success of payment.
+
   final Function(PaymentResult?) onSuccess;
+
+  /// function to trigger on failure of payment.
+
   final Function(KhaltiFailureModel) onFailure;
 
+  /// Khalti payment integration widget.
   const KhaltiSDKDemo(
       {super.key,
       required this.publicKey,

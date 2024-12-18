@@ -23,10 +23,20 @@ class Esewa extends StatelessWidget {
 
   /// Width of logo.
   final double? width;
+
+  /// function to trigger on success of payment.
+
   final Function(EsewaPaymentSuccessResponse) onSuccess;
+
+  /// function to trigger on cancellation of payment.
+
   final Function(String) onCancellation;
 
+  /// function to trigger on failure of payment.
+
   final Function(String) onFailure;
+
+  /// eSewa payment integration widget.
 
   const Esewa(
       {super.key,

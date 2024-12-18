@@ -11,7 +11,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,6 +24,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// Home widget containing the UI and functionality for the payment gateway demo.
 class Home extends StatelessWidget {
   const Home({super.key});
 
@@ -35,10 +35,11 @@ class Home extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ElevatedButton(
-              onPressed: () {
-                generatePidx();
-              },
-              child: const Text("Generate Pidx")),
+            onPressed: () {
+              generatePidx(); // Call a function to generate a Pidx.
+            },
+            child: const Text("Generate Pidx"),
+          ),
           KhaltiSDKDemo(
             pidx: 'HGikCgwE8WL9qQKSXR3WbC',
             publicKey: '70ac1e9ae2534d63bff4db0ab92257e2',
@@ -50,17 +51,35 @@ class Home extends StatelessWidget {
             },
           ),
           Esewa(
+            // Secret ID for eSewa.
             secretId: 'JB0BBQ4aD0UqIThFJwAKBgAXEUkEGQUBBAwdOgABHD4DChwUAB0R',
+            // Client ID for eSewa.
             clientId: 'BhwIWQQADhIYSxILExMcAgFXFhcOBwAKBgAXEQ==',
+            // Defines eSewa product details.
+
             esewaPayment: EsewaPayment(
+              // ID of the product being purchased.
               productId: '1',
+              // Name of the product.
               productName: 'String',
+              // Price of the product.
               productPrice: '1000',
+              // Callback URL after payment.
               callbackUrl: 'www.google.com',
             ),
+
+            /// function to trigger on success of payment.
+            /// Provides EsewaPaymentSuccessResponse.
+
             onSuccess: (result) =>
                 debugPrint("onsuccesss${result.merchantName}"),
+
+            /// function to trigger on failure of payment.
+
             onFailure: (message) => debugPrint("onFailure $message"),
+
+            /// function to trigger on cancellation of payment.
+
             onCancellation: (message) => debugPrint("onCancellation $message}"),
           ),
         ],
