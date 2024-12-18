@@ -8,7 +8,7 @@ import 'package:payment_gateway_package/esewa/models/esewa_payment_success_resul
 import '../models/constants.dart';
 
 class EsewaFlutterSdk {
-  static const MethodChannel _channel = MethodChannel(METHOD_CHANNEL_NAME);
+  static const MethodChannel _channel = MethodChannel(methodChannelName);
 
   static void showToast(String message) {
     _channel.invokeMethod('showToast', {"message": message});
@@ -24,7 +24,7 @@ class EsewaFlutterSdk {
     _channel.invokeMethod('initPayment', _buildArgs(esewaConfig, esewaPayment));
     _channel.setMethodCallHandler((call) async {
       switch (call.method) {
-        case PAYMENT_METHOD_SUCCESS:
+        case paymentMethodSuccess:
           debugPrint(":::METHOD CALL RESULT SUCCESS");
           final Map<String, dynamic> result;
           if (Platform.isIOS) {
@@ -47,11 +47,11 @@ class EsewaFlutterSdk {
           );
           onPaymentSuccess(paymentResult);
           break;
-        case PAYMENT_METHOD_FAILURE:
+        case paymentMethodFailure:
           debugPrint(":::METHOD CALL RESULT FAILURE");
           onPaymentFailure(call.arguments);
           break;
-        case PAYMENT_METHOD_CANCELLATION:
+        case paymentMethodCancellation:
           debugPrint(":::METHOD CALL RESULT CANCELLATION");
           onPaymentCancellation(call.arguments);
           break;
@@ -64,7 +64,7 @@ class EsewaFlutterSdk {
     EsewaPayment esewaPayment,
   ) =>
       {
-        ARGS_KEY_CONFIG: esewaConfig.toMap(),
-        ARGS_KEY_PAYMENT: esewaPayment.toMap(),
+        argsKeyConfig: esewaConfig.toMap(),
+        argsKeyPayment: esewaPayment.toMap(),
       };
 }

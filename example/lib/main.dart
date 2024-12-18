@@ -55,7 +55,7 @@ class Home extends StatelessWidget {
               productPrice: '1000',
               callbackUrl: 'www.google.com',
             ),
-            onSuccess: (p0) => debugPrint("onsuccesss ${p0.merchantName}"),
+            onSuccess: (p0) => debugPrint("onsuccesss${p0.merchantName}"),
           ),
         ],
       ),
