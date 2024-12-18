@@ -40,10 +40,13 @@ class Home extends StatelessWidget {
               },
               child: const Text("Generate Pidx")),
           KhaltiSDKDemo(
-            pidx: '73CSdYSQrFUD8Ymynxye9n',
+            pidx: 'HGikCgwE8WL9qQKSXR3WbC',
             publicKey: '70ac1e9ae2534d63bff4db0ab92257e2',
             onSuccess: (p0) {
-              debugPrint("onSuccess ${p0?.payload?.fee.toString()}");
+              debugPrint("onSuccess ${p0?.payload?.status}");
+            },
+            onFailure: (p0) {
+              debugPrint("onFailure ${p0.needsPaymentConfirmation}");
             },
           ),
           Esewa(
@@ -57,8 +60,8 @@ class Home extends StatelessWidget {
             ),
             onSuccess: (result) =>
                 debugPrint("onsuccesss${result.merchantName}"),
-            onFailure: (message) => debugPrint("onFailure"),
-            onCancellation: (message) => debugPrint("onCancellation}"),
+            onFailure: (message) => debugPrint("onFailure $message"),
+            onCancellation: (message) => debugPrint("onCancellation $message}"),
           ),
         ],
       ),

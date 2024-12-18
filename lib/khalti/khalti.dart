@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:khalti_checkout_flutter/khalti_checkout_flutter.dart';
+import 'package:payment_gateway_package/khalti/khalti_failure_model.dart';
 
 class KhaltiSDKDemo extends StatefulWidget {
   final String pidx;
@@ -10,6 +11,7 @@ class KhaltiSDKDemo extends StatefulWidget {
   final bool testMode;
   final String publicKey;
   final Function(PaymentResult?) onSuccess;
+  final Function(KhaltiFailureModel) onFailure;
 
   const KhaltiSDKDemo(
       {super.key,
@@ -18,7 +20,8 @@ class KhaltiSDKDemo extends StatefulWidget {
       this.testMode = true,
       this.height,
       this.width,
-      required this.onSuccess});
+      required this.onSuccess,
+      required this.onFailure});
   @override
   State<KhaltiSDKDemo> createState() => _KhaltiSDKDemoState();
 }
@@ -34,7 +37,7 @@ class _KhaltiSDKDemoState extends State<KhaltiSDKDemo> {
     super.initState();
 
     final payConfig = KhaltiPayConfig(
-      publicKey: widget.publicKey,
+      publicKey: 'widget.publicKey',
       pidx: widget.pidx,
       environment: widget.testMode ? Environment.test : Environment.prod,
     );
@@ -47,7 +50,7 @@ class _KhaltiSDKDemoState extends State<KhaltiSDKDemo> {
         setState(() {
           this.paymentResult = paymentResult;
         });
-
+        widget.onSuccess(paymentResult);
         khalti.close(context);
       },
       onMessage: (
@@ -60,6 +63,12 @@ class _KhaltiSDKDemoState extends State<KhaltiSDKDemo> {
         log(
           'Description: $description, Status Code: $statusCode, Event: $event, NeedsPaymentConfirmation: $needsPaymentConfirmation',
         );
+        widget.onFailure(KhaltiFailureModel(
+            description: description,
+            statusCode: statusCode,
+            event: event,
+            needsPaymentConfirmation: needsPaymentConfirmation));
+
         khalti.close(context);
       },
       onReturn: () => log('Successfully redirected to return_url.'),
@@ -80,7 +89,6 @@ class _KhaltiSDKDemoState extends State<KhaltiSDKDemo> {
           return GestureDetector(
               onTap: () {
                 khaltiSnapshot.open(context);
-                widget.onSuccess(paymentResult);
               },
               child: Image.asset("assets/images/khalti.png",
                   width: widget.width ?? 40,
