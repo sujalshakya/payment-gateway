@@ -1,11 +1,11 @@
-class KhaltiPidxRequest {
+class PurchaseDetailModel {
   final String returnUrl;
   final String websiteUrl;
   final int amount;
   final String purchaseOrderId;
   final String purchaseOrderName;
 
-  KhaltiPidxRequest({
+  PurchaseDetailModel({
     required this.returnUrl,
     required this.websiteUrl,
     required this.amount,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:payment_gateway_package/esewa/esewa_viewmodel.dart';
-import 'package:payment_gateway_package/esewa/models/esewa_payment.dart';
 import 'package:payment_gateway_package/esewa/models/esewa_payment_success_response.dart';
+import 'package:payment_gateway_package/khalti/khalti_pidx_request.dart';
 
 class Esewa extends StatelessWidget {
   /// Whether it is for testing or not, true on default.
@@ -9,7 +9,7 @@ class Esewa extends StatelessWidget {
 
   /// Details about the product such as product id, price, name and callback url.
   /// Esewa sends a proof of payment in the callback-URL after successful payment in live environment.
-  final EsewaPayment esewaPayment;
+  final PurchaseDetailModel esewaPayment;
 
   /// Id of client, used for credentials.
   final String clientId;

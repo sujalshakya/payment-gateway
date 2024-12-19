@@ -8,6 +8,7 @@ import 'package:payment_gateway_package/esewa/models/esewa_payment.dart';
 import 'package:payment_gateway_package/esewa/models/esewa_payment_success_response.dart';
 import 'package:payment_gateway_package/esewa/models/esewa_payment_success_result.dart';
 import 'package:http/http.dart' as http;
+import 'package:payment_gateway_package/khalti/khalti_pidx_request.dart';
 import 'package:payment_gateway_package/result_model.dart';
 
 class EsewaViewmodel {
@@ -22,8 +23,8 @@ class EsewaViewmodel {
   /// - [esewaPayment]: The payment details.
   ///
   /// Returns a [Result] containing the [EsewaPaymentSuccessResponse] or an error.
-  Future<Result<EsewaPaymentSuccessResponse>> initializeEsewa(
-      String secretId, String clientId, EsewaPayment esewaPayment) async {
+  Future<Result<EsewaPaymentSuccessResponse>> initializeEsewa(String secretId,
+      String clientId, PurchaseDetailModel esewaPayment) async {
     final completer = Completer<Result<EsewaPaymentSuccessResponse>>();
 
     try {
@@ -36,7 +37,11 @@ class EsewaViewmodel {
               ? Environment.test
               : Environment.live, // Set environment.
         ),
-        esewaPayment: esewaPayment, // Payment details.
+        esewaPayment: EsewaPayment(
+            productId: esewaPayment.purchaseOrderId,
+            productName: esewaPayment.purchaseOrderName,
+            productPrice: (esewaPayment.amount / 100).toString(),
+            callbackUrl: esewaPayment.returnUrl), // Payment details.
         onPaymentSuccess: (EsewaPaymentSuccessResult data) async {
           debugPrint(":::SUCCESS::: => $data");
           // Verify the transaction status upon successful payment.

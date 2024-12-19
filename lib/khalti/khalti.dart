@@ -28,7 +28,7 @@ class KhaltiWidget extends StatefulWidget {
 
   /// Data required to generate Khalti pidx.
 
-  final KhaltiPidxRequest pidxRequest;
+  final PurchaseDetailModel pidxRequest;
 
   /// function to trigger on success of payment.
 

@@ -5,7 +5,7 @@ import 'package:payment_gateway_package/khalti/khalti_pidx_request.dart';
 import 'package:payment_gateway_package/khalti/khalti_pidx_response.dart';
 
 Future<KhaltiPidxResponse?> generatePidx(
-    KhaltiPidxRequest request, bool testMode, String secretKey) async {
+    PurchaseDetailModel request, bool testMode, String secretKey) async {
   String khaltiApiUrl = testMode
       ? 'https://a.khalti.com/api/v2/epayment/initiate/'
       : 'https://khalti.com/api/v2/epayment/initiate/';

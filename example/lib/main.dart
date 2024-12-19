@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:payment_gateway_package/esewa/esewa.dart';
-import 'package:payment_gateway_package/esewa/models/esewa_payment.dart';
+import 'package:payment_gateway_package/imepay/imepay.dart';
+import 'package:payment_gateway_package/imepay/imepay_model.dart';
 import 'package:payment_gateway_package/khalti/khalti.dart';
 import 'package:payment_gateway_package/khalti/khalti_pidx_request.dart';
 
@@ -30,25 +31,26 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final purchaseDetailModel = PurchaseDetailModel(
+        returnUrl: 'https://www.google.com/',
+        websiteUrl: 'https://www.google.com/',
+        amount: 10000,
+        purchaseOrderId: '1',
+        purchaseOrderName: 'Test');
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          KhaltiSDKDemo(
-            pidx: 'HGikCgwE8WL9qQKSXR3WbC',
+          KhaltiWidget(
             publicKey: '70ac1e9ae2534d63bff4db0ab92257e2',
-            onSuccess: (p0) {
-              debugPrint("onSuccess ${p0?.payload?.status}");
-            },
             onFailure: (p0) {
               debugPrint("onFailure ${p0.needsPaymentConfirmation}");
             },
-            pidxRequest: KhaltiPidxRequest(
-                returnUrl: 'https://www.google.com/',
-                websiteUrl: 'https://www.google.com/',
-                amount: 10000,
-                purchaseOrderId: '1',
-                purchaseOrderName: 'Test'),
+            pidxRequest: purchaseDetailModel,
+            onSuccess: (response) {
+              debugPrint("onSuccess ${response!.payload!.status}");
+            },
+            secretKey: '6465d7e60f3549ad93a49e61949fd94a',
           ),
           Esewa(
             // Secret ID for eSewa.
@@ -57,16 +59,7 @@ class Home extends StatelessWidget {
             clientId: 'BhwIWQQADhIYSxILExMcAgFXFhcOBwAKBgAXEQ==',
             // Defines eSewa product details.
 
-            esewaPayment: EsewaPayment(
-              // ID of the product being purchased.
-              productId: '1',
-              // Name of the product.
-              productName: 'String',
-              // Price of the product.
-              productPrice: '1000',
-              // Callback URL after payment.
-              callbackUrl: 'www.google.com',
-            ),
+            esewaPayment: purchaseDetailModel,
 
             /// function to trigger on success of payment.
             /// Provides EsewaPaymentSuccessResponse.
@@ -82,6 +75,17 @@ class Home extends StatelessWidget {
 
             onCancellation: (message) => debugPrint("onCancellation $message}"),
           ),
+          Imepay(
+            onSuccess: (object) => debugPrint("onCancellation $object}"),
+            purchaseDetailModel: purchaseDetailModel,
+            transaction: ImePayModel(
+              merchantCode: 'merchantCode',
+              merchantName: 'merchantName',
+              module: 'module',
+              user: 'user',
+              password: 'password',
+            ),
+          )
         ],
       ),
     );
