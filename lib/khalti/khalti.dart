@@ -6,7 +6,7 @@ import 'package:payment_gateway_package/khalti/helper.dart';
 import 'package:payment_gateway_package/khalti/khalti_failure_model.dart';
 import 'package:payment_gateway_package/khalti/khalti_pidx_request.dart';
 
-class KhaltiSDKDemo extends StatefulWidget {
+class KhaltiWidget extends StatefulWidget {
   /// Payment Identifier for Khalti.
   final String pidx;
 
@@ -36,7 +36,7 @@ class KhaltiSDKDemo extends StatefulWidget {
   final Function(KhaltiFailureModel) onFailure;
 
   /// Khalti payment integration widget.
-  const KhaltiSDKDemo(
+  const KhaltiWidget(
       {super.key,
       required this.publicKey,
       required this.pidx,
@@ -47,10 +47,10 @@ class KhaltiSDKDemo extends StatefulWidget {
       required this.onSuccess,
       required this.onFailure});
   @override
-  State<KhaltiSDKDemo> createState() => _KhaltiSDKDemoState();
+  State<KhaltiWidget> createState() => _KhaltiSDKDemoState();
 }
 
-class _KhaltiSDKDemoState extends State<KhaltiSDKDemo> {
+class _KhaltiSDKDemoState extends State<KhaltiWidget> {
   late Future<Khalti?> khalti = Future.value(null);
   PaymentResult? paymentResult;
   String? pidx;
