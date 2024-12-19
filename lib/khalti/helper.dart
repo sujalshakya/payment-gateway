@@ -5,17 +5,16 @@ import 'package:payment_gateway_package/khalti/khalti_pidx_request.dart';
 import 'package:payment_gateway_package/khalti/khalti_pidx_response.dart';
 
 Future<KhaltiPidxResponse?> generatePidx(
-    KhaltiPidxRequest request, bool testMode) async {
+    KhaltiPidxRequest request, bool testMode, String secretKey) async {
   String khaltiApiUrl = testMode
       ? 'https://a.khalti.com/api/v2/epayment/initiate/'
       : 'https://khalti.com/api/v2/epayment/initiate/';
-
   try {
     final response = await http.post(
       Uri.parse(khaltiApiUrl),
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Key 6465d7e60f3549ad93a49e61949fd94a",
+        "Authorization": "Key $secretKey",
       },
       body: jsonEncode(request.toJson()),
     );

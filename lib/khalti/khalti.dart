@@ -7,9 +7,6 @@ import 'package:payment_gateway_package/khalti/khalti_failure_model.dart';
 import 'package:payment_gateway_package/khalti/khalti_pidx_request.dart';
 
 class KhaltiWidget extends StatefulWidget {
-  /// Payment Identifier for Khalti.
-  final String pidx;
-
   /// Width of logo.
 
   final double? width;
@@ -25,6 +22,12 @@ class KhaltiWidget extends StatefulWidget {
   /// Public key for Khalti API.
   final String publicKey;
 
+  /// Secret key for Khalti API.
+
+  final String secretKey;
+
+  /// Data required to generate Khalti pidx.
+
   final KhaltiPidxRequest pidxRequest;
 
   /// function to trigger on success of payment.
@@ -39,10 +42,10 @@ class KhaltiWidget extends StatefulWidget {
   const KhaltiWidget(
       {super.key,
       required this.publicKey,
-      required this.pidx,
       this.testMode = true,
       this.height,
       this.width,
+      required this.secretKey,
       required this.pidxRequest,
       required this.onSuccess,
       required this.onFailure});
@@ -64,7 +67,8 @@ class _KhaltiSDKDemoState extends State<KhaltiWidget> {
   Future<void> _initializePayment() async {
     try {
       // Fetch pidx from the API
-      final response = await generatePidx(widget.pidxRequest, widget.testMode);
+      final response = await generatePidx(
+          widget.pidxRequest, widget.testMode, widget.secretKey);
       pidx = response?.pidx ?? "";
       if (pidx == null) {
         throw Exception("Failed to fetch pidx");
