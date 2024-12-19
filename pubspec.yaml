@@ -12,8 +12,12 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.2.0
-  khalti_checkout_flutter: ^1.0.0-dev.7
-  provider: ^6.1.2
+
+  khalti_checkout_flutter:
+    git:
+      url: https://github.com/Hritik602/checkout-sdk-flutter
+      path: packages/khalti_checkout_flutter/
+  imepay_merchant_sdk: 1.0.2+4
   esewa_flutter_sdk:
     path: ./esewa_flutter_sdk
 
@@ -21,6 +25,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+
+# dependency_override:
+# package_info_plus: ^8.1.2
+# http: ^1.2.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
