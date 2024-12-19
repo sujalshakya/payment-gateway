@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:khalti_checkout_flutter/khalti_checkout_flutter.dart';
+import 'package:payment_gateway_package/khalti/helper.dart';
 import 'package:payment_gateway_package/khalti/khalti_failure_model.dart';
+import 'package:payment_gateway_package/khalti/khalti_pidx_request.dart';
 
 class KhaltiSDKDemo extends StatefulWidget {
   /// Payment Identifier for Khalti.
@@ -23,6 +25,8 @@ class KhaltiSDKDemo extends StatefulWidget {
   /// Public key for Khalti API.
   final String publicKey;
 
+  final KhaltiPidxRequest pidxRequest;
+
   /// function to trigger on success of payment.
 
   final Function(PaymentResult?) onSuccess;
@@ -39,6 +43,7 @@ class KhaltiSDKDemo extends StatefulWidget {
       this.testMode = true,
       this.height,
       this.width,
+      required this.pidxRequest,
       required this.onSuccess,
       required this.onFailure});
   @override
@@ -46,52 +51,74 @@ class KhaltiSDKDemo extends StatefulWidget {
 }
 
 class _KhaltiSDKDemoState extends State<KhaltiSDKDemo> {
-  late final Future<Khalti?> khalti;
-  late final String? pidx;
-
+  late Future<Khalti?> khalti = Future.value(null);
   PaymentResult? paymentResult;
+  String? pidx;
 
   @override
   void initState() {
     super.initState();
+    _initializePayment();
+  }
 
-    final payConfig = KhaltiPayConfig(
-      publicKey: 'widget.publicKey',
-      pidx: widget.pidx,
-      environment: widget.testMode ? Environment.test : Environment.prod,
-    );
+  Future<void> _initializePayment() async {
+    try {
+      // Fetch pidx from the API
+      final response = await generatePidx(widget.pidxRequest, widget.testMode);
+      pidx = response?.pidx ?? "";
+      if (pidx == null) {
+        throw Exception("Failed to fetch pidx");
+      }
+      setState(() {});
+      final payConfig = KhaltiPayConfig(
+        publicKey: widget.publicKey,
+        pidx: pidx!,
+        environment: widget.testMode ? Environment.test : Environment.prod,
+      );
 
-    khalti = Khalti.init(
-      enableDebugging: true,
-      payConfig: payConfig,
-      onPaymentResult: (paymentResult, khalti) {
-        log(paymentResult.toString());
-        setState(() {
-          this.paymentResult = paymentResult;
-        });
-        widget.onSuccess(paymentResult);
-        khalti.close(context);
-      },
-      onMessage: (
-        khalti, {
-        description,
-        statusCode,
-        event,
-        needsPaymentConfirmation,
-      }) async {
-        log(
-          'Description: $description, Status Code: $statusCode, Event: $event, NeedsPaymentConfirmation: $needsPaymentConfirmation',
-        );
-        widget.onFailure(KhaltiFailureModel(
-            description: description,
-            statusCode: statusCode,
-            event: event,
-            needsPaymentConfirmation: needsPaymentConfirmation));
+      khalti = Khalti.init(
+        enableDebugging: true,
+        payConfig: payConfig,
+        onPaymentResult: (paymentResult, khalti) {
+          log(paymentResult.toString());
+          setState(() {
+            this.paymentResult = paymentResult;
+          });
+          widget.onSuccess(paymentResult);
+          khalti.close(context);
+        },
+        onMessage: (
+          khalti, {
+          description,
+          statusCode,
+          event,
+          needsPaymentConfirmation,
+        }) async {
+          log(
+            'Description: $description, Status Code: $statusCode, Event: $event, NeedsPaymentConfirmation: $needsPaymentConfirmation',
+          );
+          widget.onFailure(
+            KhaltiFailureModel(
+              description: description,
+              statusCode: statusCode,
+              event: event,
+              needsPaymentConfirmation: needsPaymentConfirmation,
+            ),
+          );
 
-        khalti.close(context);
-      },
-      onReturn: () => log('Successfully redirected to return_url.'),
-    );
+          khalti.close(context);
+        },
+        onReturn: () => log('Successfully redirected to return_url.'),
+      );
+    } catch (e) {
+      log("Error initializing Khalti: $e");
+      widget.onFailure(KhaltiFailureModel(
+        description: "Error initializing Khalti: $e",
+        statusCode: null,
+        event: null,
+        needsPaymentConfirmation: null,
+      ));
+    }
   }
 
   @override

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:payment_gateway_package/esewa/esewa.dart';
 import 'package:payment_gateway_package/esewa/models/esewa_payment.dart';
 import 'package:payment_gateway_package/khalti/khalti.dart';
-import 'package:payment_gateway_package/khalti/helper.dart';
+import 'package:payment_gateway_package/khalti/khalti_pidx_request.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,12 +34,6 @@ class Home extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ElevatedButton(
-            onPressed: () {
-              generatePidx(); // Call a function to generate a Pidx.
-            },
-            child: const Text("Generate Pidx"),
-          ),
           KhaltiSDKDemo(
             pidx: 'HGikCgwE8WL9qQKSXR3WbC',
             publicKey: '70ac1e9ae2534d63bff4db0ab92257e2',
@@ -49,6 +43,12 @@ class Home extends StatelessWidget {
             onFailure: (p0) {
               debugPrint("onFailure ${p0.needsPaymentConfirmation}");
             },
+            pidxRequest: KhaltiPidxRequest(
+                returnUrl: 'https://www.google.com/',
+                websiteUrl: 'https://www.google.com/',
+                amount: 10000,
+                purchaseOrderId: '1',
+                purchaseOrderName: 'Test'),
           ),
           Esewa(
             // Secret ID for eSewa.
