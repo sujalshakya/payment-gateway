@@ -18,6 +18,7 @@ dependencies:
       url: https://github.com/Hritik602/checkout-sdk-flutter
       path: packages/khalti_checkout_flutter/
   imepay_merchant_sdk: 1.0.2+4
+  flutter_paypal: ^0.2.1
   esewa_flutter_sdk:
     path: ./esewa_flutter_sdk
 

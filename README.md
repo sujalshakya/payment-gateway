@@ -2,6 +2,8 @@
 
 Allows payment through esewa, khalti ...
 
+Transaction details needs to be created containing the data of the transaction which can be sent to any of the payment gateways.
+
 ```
  TransactionDetails(
 
@@ -12,7 +14,7 @@ Allows payment through esewa, khalti ...
         /// URL for the website.
         websiteUrl: 'https://www.google.com/',
 
-        /// Amount for the transaction.
+        /// Amount for the transaction in paisa.
 
         amount: 1000,
 
