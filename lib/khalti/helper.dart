@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:payment_gateway_package/khalti/khalti_pidx_request.dart';
+import 'package:payment_gateway_package/transaction_detail_model.dart';
 import 'package:payment_gateway_package/khalti/khalti_pidx_response.dart';
 
 Future<KhaltiPidxResponse?> generatePidx(
-    PurchaseDetailModel request, bool testMode, String secretKey) async {
+    TransactionDetails request, bool testMode, String secretKey) async {
   String khaltiApiUrl = testMode
       ? 'https://a.khalti.com/api/v2/epayment/initiate/'
       : 'https://khalti.com/api/v2/epayment/initiate/';

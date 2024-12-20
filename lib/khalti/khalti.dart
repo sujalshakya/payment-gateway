@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:khalti_checkout_flutter/khalti_checkout_flutter.dart';
 import 'package:payment_gateway_package/khalti/helper.dart';
 import 'package:payment_gateway_package/khalti/khalti_failure_model.dart';
-import 'package:payment_gateway_package/khalti/khalti_pidx_request.dart';
+import 'package:payment_gateway_package/transaction_detail_model.dart';
 
 class KhaltiWidget extends StatefulWidget {
   /// Width of the logo for Khalti payment widget.
@@ -23,7 +23,7 @@ class KhaltiWidget extends StatefulWidget {
   final String secretKey;
 
   /// Data required to generate Khalti pidx (Payment ID).
-  final PurchaseDetailModel pidxRequest;
+  final TransactionDetails pidxRequest;
 
   /// Callback function to trigger on success of payment.
   final Function(PaymentResult?) onSuccess;

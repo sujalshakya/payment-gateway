@@ -3,7 +3,7 @@ import 'package:payment_gateway_package/esewa/esewa.dart';
 import 'package:payment_gateway_package/imepay/imepay.dart';
 import 'package:payment_gateway_package/imepay/imepay_model.dart';
 import 'package:payment_gateway_package/khalti/khalti.dart';
-import 'package:payment_gateway_package/khalti/khalti_pidx_request.dart';
+import 'package:payment_gateway_package/transaction_detail_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,26 +33,26 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     /// Defining the purchase details model used for all payment gateways.
 
-    final purchaseDetailModel = PurchaseDetailModel(
+    final transactionDetails = TransactionDetails(
 
-        /// URL to return after payment.
+        /// URL to return after payment. Details of the transaction is sent to this url.
 
-        returnUrl: 'https:///www.google.com/',
+        returnUrl: 'https://www.google.com/',
 
         /// URL for the website.
-        websiteUrl: 'https:///www.google.com/',
+        websiteUrl: 'https://www.google.com/',
 
         /// Amount for the transaction.
 
-        amount: 10000,
+        amount: 1000,
 
         /// Unique purchase order ID.
 
-        purchaseOrderId: '1',
+        id: '1',
 
         /// Name of the order.
 
-        purchaseOrderName: 'Test');
+        orderName: 'Test');
 
     return Scaffold(
       body: Column(
@@ -70,9 +70,9 @@ class Home extends StatelessWidget {
               debugPrint("onFailure ${p0.needsPaymentConfirmation}");
             },
 
-            /// Passing the purchase details.
+            /// Passing the purchase details to generate pidx.
 
-            pidxRequest: purchaseDetailModel,
+            pidxRequest: transactionDetails,
 
             /// Handle success.
 
@@ -97,7 +97,7 @@ class Home extends StatelessWidget {
 
             /// Passing the purchase details.
 
-            esewaPayment: purchaseDetailModel,
+            esewaPayment: transactionDetails,
 
             //// Function triggered on successful payment.
             onSuccess: (result) =>
@@ -107,39 +107,39 @@ class Home extends StatelessWidget {
             onFailure: (message) => debugPrint("onFailure $message"),
 
             //// Function triggered on cancellation of payment.
-            onCancellation: (message) => debugPrint("onCancellation $message}"),
+            onCancellation: (message) => debugPrint("onCancellation $message"),
           ),
 
           /// Imepay payment gateway widget.
           Imepay(
             /// Handle success.
 
-            onSuccess: (object) => debugPrint("onCancellation $object}"),
+            onSuccess: (object) => debugPrint("onCancellation $object"),
 
             /// Passing the purchase details.
 
-            purchaseDetailModel: purchaseDetailModel,
+            transactionDetails: transactionDetails,
 
             transaction: ImePayModel(
               /// Merchant code for Imepay.
 
-              merchantCode: 'merchantCode',
+              merchantCode: 'EDUSANJAL',
 
               /// Merchant name for Imepay.
 
-              merchantName: 'merchantName',
+              merchantName: 'Edu Sanjal',
 
               /// Module  for Imepay.
 
-              module: 'module',
+              module: 'EDUSANJAL',
 
               /// User identifier for Imepay.
 
-              user: 'user',
+              user: 'edusanjal',
 
               /// Users Password for Imepay.
 
-              password: 'password',
+              password: 'ime@1234',
             ),
           )
         ],
