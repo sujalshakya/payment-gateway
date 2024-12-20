@@ -63,7 +63,7 @@ class Paypal extends StatelessWidget {
                       onSuccess: (Map params) async {
                         debugPrint("Success: $params");
                         transactionDetails.onSuccess(SuccessResponse(
-                            orderId: transactionDetails.id,
+                            transactionId: params["data"]["id"],
                             orderName: params["data"]["transactions"][0]
                                 ["item_list"]["items"][0]["name"],
                             totalAmount: params["data"]["transactions"][0]

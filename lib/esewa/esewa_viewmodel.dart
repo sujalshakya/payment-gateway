@@ -40,7 +40,7 @@ class EsewaViewmodel {
         esewaPayment: EsewaPayment(
             productId: esewaPayment.id,
             productName: esewaPayment.orderName,
-            productPrice: (esewaPayment.amount / 100).toString(),
+            productPrice: (esewaPayment.amount).toString(),
             callbackUrl: esewaPayment.returnUrl), // Payment details.
         onPaymentSuccess: (EsewaPaymentSuccessResult data) async {
           debugPrint(":::SUCCESS::: => $data");

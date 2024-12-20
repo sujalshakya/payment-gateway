@@ -83,6 +83,18 @@ class _KhaltiSDKDemoState extends State<KhaltiWidget> {
             setState(() {
               this.paymentResult = paymentResult;
             });
+            widget.pidxRequest.onSuccess(SuccessResponse(
+                transactionId: paymentResult.payload?.transactionId ?? "",
+                orderName: paymentResult.payload?.purchaseOrderName ?? "",
+                totalAmount:
+                    paymentResult.payload?.totalAmount.toString() ?? "",
+                status:
+                    paymentResult.payload?.status.toString().toLowerCase() ==
+                            "completed"
+                        ? 'success'
+                        : 'fail',
+                time: DateTime.now().toString()));
+
             khalti.close(context); // Close the Khalti SDK screen.
           },
           onMessage: (
@@ -96,13 +108,6 @@ class _KhaltiSDKDemoState extends State<KhaltiWidget> {
             log(
               'Description: $description, Status Code: $statusCode, Event: $event, NeedsPaymentConfirmation: $needsPaymentConfirmation',
             );
-            widget.pidxRequest.onSuccess(SuccessResponse(
-                orderId: paymentResult?.payload?.transactionId ?? "",
-                orderName: paymentResult?.payload?.purchaseOrderName ?? "",
-                totalAmount:
-                    paymentResult?.payload?.totalAmount.toString() ?? "",
-                status: 'success',
-                time: DateTime.now().toString()));
 
             // Trigger on failure callback with failure details.
             widget.pidxRequest.onFailure(

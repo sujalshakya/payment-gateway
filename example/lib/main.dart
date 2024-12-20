@@ -37,7 +37,7 @@ class Home extends StatelessWidget {
         clientId: 'clientId',
         secretId: 'secretId',
         onSuccess: (response) {
-          debugPrint("onSuccess ${response.orderName}");
+          debugPrint("onSuccess ${response.status}");
         },
         onFailure: (message) => debugPrint("onFailure $message"),
         onCancellation: (message) => debugPrint("onCancellation $message"),

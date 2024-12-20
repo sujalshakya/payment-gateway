@@ -40,10 +40,16 @@ class Esewa extends StatelessWidget {
               .then((result) {
             if (result.isSuccess) {
               esewaPayment.onSuccess(SuccessResponse(
-                  orderId: result.data?.productId ?? "",
+                  transactionId:
+                      result.data?.transactionDetails?.referenceId ?? "",
                   orderName: result.data?.productName ?? "",
                   totalAmount: result.data?.totalAmount.toString() ?? "",
-                  status: result.data?.transactionDetails?.status ?? "",
+                  status: result.data?.transactionDetails?.status
+                              .toString()
+                              .toLowerCase() ==
+                          'complete'
+                      ? 'success'
+                      : 'fail',
                   time: result.data?.transactionDetails?.date ?? ""));
             } else if (result.isFailed) {
               esewaPayment.onFailure(result.message!);

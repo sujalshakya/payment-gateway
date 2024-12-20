@@ -45,7 +45,7 @@ class _MyHomePageState extends State<Imepay> {
               merchantCode: widget.transactionDetails.imepayMerchantCode ?? "",
               merchantName: widget.transactionDetails.imepayMerchantName ?? "",
               merchantUrl: widget.transactionDetails.websiteUrl,
-              amount: (widget.transactionDetails.amount / 100).toString(),
+              amount: (widget.transactionDetails.amount).toString(),
               customerName: widget.transactionDetails.imepayUser ?? "",
               refId: widget.transactionDetails.id,
               module: widget.transactionDetails.imepayModule ?? "",
