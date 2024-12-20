@@ -59,6 +59,7 @@ class Paypal extends StatelessWidget {
                           }
                         }
                       ],
+                      note: "Contact us for any questions on your order.",
                       onSuccess: (Map params) async {
                         debugPrint("Success: $params");
                         transactionDetails.onSuccess(SuccessResponse(
