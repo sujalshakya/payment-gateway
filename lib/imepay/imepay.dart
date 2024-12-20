@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:imepay_merchant_sdk/start_sdk.dart';
-import 'package:payment_gateway_package/imepay/imepay_model.dart';
 import 'package:payment_gateway_package/transaction_detail_model.dart';
 
 class Imepay extends StatefulWidget {
@@ -19,13 +18,6 @@ class Imepay extends StatefulWidget {
 
   final TransactionDetails transactionDetails;
 
-  /// Imepay specific data such as  merchantCode, merchantName, module, user, password;
-  final ImePayModel transaction;
-
-  /// function to trigger on success of payment.
-
-  final Function(Object?) onSuccess;
-
   /// ImePay integration widget.
   const Imepay({
     this.testmode = true,
@@ -33,8 +25,6 @@ class Imepay extends StatefulWidget {
     required this.transactionDetails,
     this.height,
     this.width,
-    required this.onSuccess,
-    required this.transaction,
   });
 
   @override
@@ -52,15 +42,15 @@ class _MyHomePageState extends State<Imepay> {
     return GestureDetector(
         onTap: () async {
           var result = await StartSdk.callSdk(context,
-              merchantCode: widget.transaction.merchantCode,
-              merchantName: widget.transaction.merchantName,
+              merchantCode: widget.transactionDetails.imepayMerchantCode ?? "",
+              merchantName: widget.transactionDetails.imepayMerchantName ?? "",
               merchantUrl: widget.transactionDetails.websiteUrl,
               amount: (widget.transactionDetails.amount / 100).toString(),
-              customerName: widget.transaction.user,
+              customerName: widget.transactionDetails.imepayUser ?? "",
               refId: widget.transactionDetails.id,
-              module: widget.transaction.module,
-              user: widget.transaction.user,
-              password: widget.transaction.password,
+              module: widget.transactionDetails.imepayModule ?? "",
+              user: widget.transactionDetails.imepayUser ?? "",
+              password: widget.transactionDetails.imepayPassword ?? "",
               userAssetImage: '',
               deliveryUrl: widget.transactionDetails.returnUrl,
               buildType: widget.testmode ? BuildType.STAGE : BuildType.LIVE);

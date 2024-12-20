@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payment_gateway_package/esewa/esewa_viewmodel.dart';
-import 'package:payment_gateway_package/esewa/models/esewa_payment_success_response.dart';
+import 'package:payment_gateway_package/success_response.dart';
 import 'package:payment_gateway_package/transaction_detail_model.dart' as base;
 
 class Esewa extends StatelessWidget {
@@ -11,12 +11,6 @@ class Esewa extends StatelessWidget {
   /// Esewa sends a proof of payment in the callback-URL after successful payment in live environment.
   final base.TransactionDetails esewaPayment;
 
-  /// Id of client, used for credentials.
-  final String clientId;
-
-  /// Secret Id, used for credentials.
-  final String secretId;
-
   /// Height of logo.
 
   final double? height;
@@ -24,31 +18,15 @@ class Esewa extends StatelessWidget {
   /// Width of logo.
   final double? width;
 
-  /// function to trigger on success of payment.
-
-  final Function(EsewaPaymentSuccessResponse) onSuccess;
-
-  /// function to trigger on cancellation of payment.
-
-  final Function(String) onCancellation;
-
-  /// function to trigger on failure of payment.
-
-  final Function(String) onFailure;
-
   /// eSewa payment integration widget.
 
-  const Esewa(
-      {super.key,
-      this.testmode = true,
-      required this.clientId,
-      this.height,
-      this.width,
-      required this.secretId,
-      required this.esewaPayment,
-      required this.onFailure,
-      required this.onCancellation,
-      required this.onSuccess});
+  const Esewa({
+    super.key,
+    this.testmode = true,
+    this.height,
+    this.width,
+    required this.esewaPayment,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -57,14 +35,20 @@ class Esewa extends StatelessWidget {
         onTap: () async {
           viewModel.testmode = testmode;
           await viewModel
-              .initializeEsewa(clientId, secretId, esewaPayment)
+              .initializeEsewa(
+                  esewaPayment.clientId, esewaPayment.secretId, esewaPayment)
               .then((result) {
             if (result.isSuccess) {
-              onSuccess(result.data!);
+              esewaPayment.onSuccess(SuccessResponse(
+                  orderId: result.data?.productId ?? "",
+                  orderName: result.data?.productName ?? "",
+                  totalAmount: result.data?.totalAmount.toString() ?? "",
+                  status: result.data?.transactionDetails?.status ?? "",
+                  time: result.data?.transactionDetails?.date ?? ""));
             } else if (result.isFailed) {
-              onFailure(result.message!);
+              esewaPayment.onFailure(result.message!);
             } else if (result.isCancelled) {
-              onCancellation(result.message!);
+              esewaPayment.onCancellation(result.message!);
             }
           });
         },

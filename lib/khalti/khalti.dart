@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:khalti_checkout_flutter/khalti_checkout_flutter.dart';
 import 'package:payment_gateway_package/khalti/helper.dart';
 import 'package:payment_gateway_package/khalti/khalti_failure_model.dart';
+import 'package:payment_gateway_package/success_response.dart';
 import 'package:payment_gateway_package/transaction_detail_model.dart';
 
 class KhaltiWidget extends StatefulWidget {
@@ -16,32 +17,16 @@ class KhaltiWidget extends StatefulWidget {
   /// Whether it is for testing or production mode. Default is true for test mode.
   final bool testMode;
 
-  /// Public key for Khalti API integration.
-  final String publicKey;
-
-  /// Secret key for Khalti API integration.
-  final String secretKey;
-
   /// Data required to generate Khalti pidx (Payment ID).
   final TransactionDetails pidxRequest;
-
-  /// Callback function to trigger on success of payment.
-  final Function(PaymentResult?) onSuccess;
-
-  /// Callback function to trigger on failure of payment.
-  final Function(KhaltiFailureModel) onFailure;
 
   /// Khalti payment integration widget constructor.
   const KhaltiWidget({
     super.key,
-    required this.publicKey,
     this.testMode = true,
     this.height,
     this.width,
-    required this.secretKey,
     required this.pidxRequest,
-    required this.onSuccess,
-    required this.onFailure,
   });
 
   @override
@@ -72,7 +57,7 @@ class _KhaltiSDKDemoState extends State<KhaltiWidget> {
       final response = await generatePidx(
         widget.pidxRequest,
         widget.testMode,
-        widget.secretKey,
+        widget.pidxRequest.secretId,
       );
 
       // Check if pidx was successfully fetched.
@@ -84,60 +69,62 @@ class _KhaltiSDKDemoState extends State<KhaltiWidget> {
 
       // Set up KhaltiPayConfig with public key, pidx, and environment.
       final payConfig = KhaltiPayConfig(
-        publicKey: widget.publicKey,
+        publicKey: widget.pidxRequest.clientId,
         pidx: pidx!,
         environment: widget.testMode ? Environment.test : Environment.prod,
       );
 
       // Initialize Khalti SDK with the configuration.
       khalti = Khalti.init(
-        enableDebugging: true, // Enable debugging logs.
-        payConfig: payConfig, // Pass the payment configuration.
-        onPaymentResult: (paymentResult, khalti) {
-          log(paymentResult.toString()); // Log the payment result.
-          setState(() {
-            this.paymentResult = paymentResult;
+          enableDebugging: true, // Enable debugging logs.
+          payConfig: payConfig, // Pass the payment configuration.
+          onPaymentResult: (paymentResult, khalti) {
+            log(paymentResult.toString()); // Log the payment result.
+            setState(() {
+              this.paymentResult = paymentResult;
+            });
+            khalti.close(context); // Close the Khalti SDK screen.
+          },
+          onMessage: (
+            khalti, {
+            description,
+            statusCode,
+            event,
+            needsPaymentConfirmation,
+          }) async {
+            // Log the message from Khalti SDK for debugging.
+            log(
+              'Description: $description, Status Code: $statusCode, Event: $event, NeedsPaymentConfirmation: $needsPaymentConfirmation',
+            );
+            widget.pidxRequest.onSuccess(SuccessResponse(
+                orderId: paymentResult?.payload?.pidx ?? "",
+                orderName: paymentResult?.payload?.purchaseOrderName ?? "",
+                totalAmount:
+                    paymentResult?.payload?.totalAmount.toString() ?? "",
+                status: 'success',
+                time: DateTime.now().toString()));
+
+            // Trigger on failure callback with failure details.
+            widget.pidxRequest.onFailure(
+              KhaltiFailureModel(
+                description: description,
+                statusCode: statusCode,
+                event: event,
+                needsPaymentConfirmation: needsPaymentConfirmation,
+              ).toString(),
+            );
+
+            khalti.close(context); // Close the Khalti SDK screen after failure.
+          },
+          onReturn: () {
+            log('Successfully redirected to return_url.');
           });
-          widget.onSuccess(paymentResult); // Trigger on success callback.
-          khalti.close(context); // Close the Khalti SDK screen.
-        },
-        onMessage: (
-          khalti, {
-          description,
-          statusCode,
-          event,
-          needsPaymentConfirmation,
-        }) async {
-          // Log the message from Khalti SDK for debugging.
-          log(
-            'Description: $description, Status Code: $statusCode, Event: $event, NeedsPaymentConfirmation: $needsPaymentConfirmation',
-          );
-
-          // Trigger on failure callback with failure details.
-          widget.onFailure(
-            KhaltiFailureModel(
-              description: description,
-              statusCode: statusCode,
-              event: event,
-              needsPaymentConfirmation: needsPaymentConfirmation,
-            ),
-          );
-
-          khalti.close(context); // Close the Khalti SDK screen after failure.
-        },
-        onReturn: () => log('Successfully redirected to return_url.'),
-      );
     } catch (e) {
       // Handle errors during initialization.
       log("Error initializing Khalti: $e");
 
       // Trigger on failure callback with error details.
-      widget.onFailure(KhaltiFailureModel(
-        description: "Error initializing Khalti: $e",
-        statusCode: null,
-        event: null,
-        needsPaymentConfirmation: null,
-      ));
+      widget.pidxRequest.onFailure(e.toString());
     }
   }
 

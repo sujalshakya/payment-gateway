@@ -16,7 +16,13 @@ Future<KhaltiPidxResponse?> generatePidx(
         "Content-Type": "application/json",
         "Authorization": "Key $secretKey",
       },
-      body: jsonEncode(request.toJson()),
+      body: jsonEncode({
+        "return_url": request.returnUrl,
+        "website_url": request.websiteUrl,
+        "amount": request.amount,
+        "purchase_order_id": request.id,
+        "purchase_order_name": request.orderName,
+      }),
     );
 
     if (response.statusCode == 200) {
