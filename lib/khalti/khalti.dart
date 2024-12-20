@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:khalti_checkout_flutter/khalti_checkout_flutter.dart';
-import 'package:payment_gateway_package/khalti/helper.dart';
+import 'package:payment_gateway_package/khalti/pidx_generator.dart';
 import 'package:payment_gateway_package/khalti/khalti_failure_model.dart';
 import 'package:payment_gateway_package/success_response.dart';
 import 'package:payment_gateway_package/transaction_detail_model.dart';
@@ -97,7 +97,7 @@ class _KhaltiSDKDemoState extends State<KhaltiWidget> {
               'Description: $description, Status Code: $statusCode, Event: $event, NeedsPaymentConfirmation: $needsPaymentConfirmation',
             );
             widget.pidxRequest.onSuccess(SuccessResponse(
-                orderId: paymentResult?.payload?.pidx ?? "",
+                orderId: paymentResult?.payload?.transactionId ?? "",
                 orderName: paymentResult?.payload?.purchaseOrderName ?? "",
                 totalAmount:
                     paymentResult?.payload?.totalAmount.toString() ?? "",
