@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:payment_gateway_package/esewa/esewa.dart';
 import 'package:payment_gateway_package/imepay/imepay.dart';
-import 'package:payment_gateway_package/imepay/imepay_model.dart';
 import 'package:payment_gateway_package/khalti/khalti.dart';
+import 'package:payment_gateway_package/paypal/paypal.dart';
 import 'package:payment_gateway_package/transaction_detail_model.dart';
 
 void main() {
@@ -33,114 +33,61 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     /// Defining the purchase details model used for all payment gateways.
 
-    final transactionDetails = TransactionDetails(
-
-        /// URL to return after payment. Details of the transaction is sent to this url.
-
+    TransactionDetails transactionDetails = TransactionDetails(
+        clientId: 'clientId',
+        secretId: 'secretId',
+        onSuccess: (response) {
+          debugPrint("onSuccess ${response.orderName}");
+        },
+        onFailure: (message) => debugPrint("onFailure $message"),
+        onCancellation: (message) => debugPrint("onCancellation $message"),
         returnUrl: 'https://www.google.com/',
-
-        /// URL for the website.
         websiteUrl: 'https://www.google.com/',
-
-        /// Amount for the transaction.
-
         amount: 1000,
-
-        /// Unique purchase order ID.
-
-        id: '1',
-
-        /// Name of the order.
-
-        orderName: 'Test');
+        id: '1234',
+        orderName: 'Test Order');
 
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Paypal(
+            transactionDetails: transactionDetails.copyWith(
+              websiteUrl: 'https://samplesite.com/cancel',
+              returnUrl: 'https://samplesite.com/return',
+              clientId:
+                  'Af1N-W21JpPIuuQeQy01V4HN2IORfsigoiI-a1pVZU3dBocscrwYb3JbBNf6FZO_-xIlwvjTv-M-ahw5',
+              secretId:
+                  'EKy0QxlrARTM_f_lNOYfFkWxuy3_-Tuu_a8TrvVTPYK6eC-K25qJbTql7wsZ8F-KesQfKyVkrBjemv7F',
+            ),
+          ),
+
           /// Khalti payment gateway widget.
           KhaltiWidget(
-            /// Public key for Khalti API.
-
-            publicKey: '70ac1e9ae2534d63bff4db0ab92257e2',
-
-            /// Handle failure.
-
-            onFailure: (p0) {
-              debugPrint("onFailure ${p0.needsPaymentConfirmation}");
-            },
-
             /// Passing the purchase details to generate pidx.
-
-            pidxRequest: transactionDetails,
-
-            /// Handle success.
-
-            onSuccess: (response) {
-              debugPrint("onSuccess ${response!.payload!.status}");
-            },
-
-            /// Secret key for Khalti API.
-
-            secretKey: '6465d7e60f3549ad93a49e61949fd94a',
+            pidxRequest: transactionDetails.copyWith(
+                clientId: '70ac1e9ae2534d63bff4db0ab92257e2',
+                secretId: '6465d7e60f3549ad93a49e61949fd94a'),
           ),
 
           /// eSewa payment gateway widget.
           Esewa(
-            /// Secret ID for eSewa.
-
-            secretId: 'JB0BBQ4aD0UqIThFJwAKBgAXEUkEGQUBBAwdOgABHD4DChwUAB0R',
-
-            /// Client ID for eSewa.
-
-            clientId: 'BhwIWQQADhIYSxILExMcAgFXFhcOBwAKBgAXEQ==',
-
-            /// Passing the purchase details.
-
-            esewaPayment: transactionDetails,
-
-            //// Function triggered on successful payment.
-            onSuccess: (result) =>
-                debugPrint("onsuccesss${result.merchantName}"),
-
-            //// Function triggered on failure of payment.
-            onFailure: (message) => debugPrint("onFailure $message"),
-
-            //// Function triggered on cancellation of payment.
-            onCancellation: (message) => debugPrint("onCancellation $message"),
+            esewaPayment: transactionDetails.copyWith(
+              secretId: 'JB0BBQ4aD0UqIThFJwAKBgAXEUkEGQUBBAwdOgABHD4DChwUAB0R',
+              clientId: 'BhwIWQQADhIYSxILExMcAgFXFhcOBwAKBgAXEQ==',
+            ),
           ),
 
           /// Imepay payment gateway widget.
           Imepay(
-            /// Handle success.
-
-            onSuccess: (object) => debugPrint("onCancellation $object"),
-
             /// Passing the purchase details.
 
-            transactionDetails: transactionDetails,
-
-            transaction: ImePayModel(
-              /// Merchant code for Imepay.
-
-              merchantCode: 'EDUSANJAL',
-
-              /// Merchant name for Imepay.
-
-              merchantName: 'Edu Sanjal',
-
-              /// Module  for Imepay.
-
-              module: 'EDUSANJAL',
-
-              /// User identifier for Imepay.
-
-              user: 'edusanjal',
-
-              /// Users Password for Imepay.
-
-              password: 'ime@1234',
-            ),
+            transactionDetails: transactionDetails.copyWith(
+                imepayMerchantCode: 'EDUSANJAL',
+                imepayMerchantName: '',
+                imepayModule: '',
+                imepayUser: '',
+                imepayPassword: ''),
           )
         ],
       ),
